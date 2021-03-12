@@ -11,7 +11,11 @@ h1 {
 .converter-wrapper {
   display: flex;
   align-items: center;
+}
 
+.converter-form {
+  display: flex;
+  align-items: center;
 }
 
 select {

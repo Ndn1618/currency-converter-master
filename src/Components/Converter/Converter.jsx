@@ -9,14 +9,16 @@ function Converter(props) {
     amount
   } = props
   return (
-    <div className="converter">
-      <select value={selectedCurrency} onChange={onChangeCurrency}>
-        {currencyOptions.map(option => (
-          <option key={option} value={option}>{option}</option>
-        ))}
-      </select>
-      <input type="number" className="input" value={amount} onChange={onChangeAmount} />
-    </div>
+    <>
+      <div className="converter">
+        <select value={selectedCurrency} onChange={onChangeCurrency}>
+          {currencyOptions.map(option => (
+            <option key={option} value={option}>{option}</option>
+          ))}
+        </select>
+        <input type="number" className="input" value={amount || 1} onChange={onChangeAmount} />
+      </div>
+    </>
   )
 }
 

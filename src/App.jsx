@@ -39,9 +39,11 @@ function App() {
 
   useEffect(() => {
     if (fromCurrency != null && toCurrency != null) {
-      fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${toCurrency}`)
-        .then(res => res.json())
-        .then(data => setExchangeRate(data.rates[toCurrency]))
+      ; (async function () {
+        const response = await fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${toCurrency}`)
+        const data = await response.json()
+        setExchangeRate(data.rates[toCurrency])
+      })()
     }
   }, [fromCurrency, toCurrency])
 
@@ -72,8 +74,14 @@ function App() {
   function addAll(evt) {
     const copiedConverterElements = (evt.target.previousElementSibling.lastChild).cloneNode(true)
 
-    let addConverterBtn = copiedConverterElements.querySelector('button')
+    let addConverterBtn = copiedConverterElements.querySelector("#addOneBtn")
+    console.log(addConverterBtn)
     addConverterBtn.addEventListener('click', addOne)
+
+    let deleteButtons = copiedConverterElements.querySelectorAll(".deleteBtn")
+    for (let i = 2; i < deleteButtons.length; i++) {
+      deleteButtons[i].addEventListener('click', (evt) => evt.target.parentElement.remove())
+    }
 
     let converterSelects = copiedConverterElements.querySelectorAll('select')
     let baseSelect = converterSelects[0]
@@ -92,6 +100,11 @@ function App() {
     // console.log(evt.target.previousElementSibling.lastChild.lastChild.value)
     let converterSelect = newConverter.querySelector('select')
     converterSelect.addEventListener('change', calculateCurrency)
+
+    let deleteConverterBtn = newConverter.querySelector('button')
+    deleteConverterBtn.classList.remove('deleteConverterBtn')
+    deleteConverterBtn.addEventListener('click', (evt) => evt.target.parentElement.remove())
+
     evt.target.previousElementSibling.appendChild(newConverter)
   }
 
@@ -117,7 +130,7 @@ function App() {
                 amount={toAmount}
               />
             </div>
-            <button type="button" onClick={addOne}>+</button>
+            <button id="addOneBtn" type="button" onClick={addOne}>+</button>
           </form>
         </div>
         <button type="button" onClick={addAll}>+</button>
@@ -126,4 +139,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

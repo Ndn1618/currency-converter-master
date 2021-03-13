@@ -17,6 +17,7 @@ function Converter(props) {
           ))}
         </select>
         <input type="number" className="input" value={amount || 1} onChange={onChangeAmount} />
+        <button className="deleteConverterBtn deleteBtn" type="button">X</button>
       </div>
     </>
   )

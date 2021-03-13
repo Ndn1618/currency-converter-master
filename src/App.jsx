@@ -75,7 +75,6 @@ function App() {
     const copiedConverterElements = (evt.target.previousElementSibling.lastChild).cloneNode(true)
 
     let addConverterBtn = copiedConverterElements.querySelector("#addOneBtn")
-    console.log(addConverterBtn)
     addConverterBtn.addEventListener('click', addOne)
 
     let deleteButtons = copiedConverterElements.querySelectorAll(".deleteBtn")

@@ -7,8 +7,6 @@ const BASE_URL = 'https://api.exchangeratesapi.io/latest'
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState(JSON.parse(localStorage.getItem('currencyOptions')) || [])
 
-  // const [currencyCalculations, setCurrencyCalculations] = useState(JSON.parse(localStorage.getItem('currencyCalculations')) || [])
-
   const [fromCurrency, setFromCurrency] = useState()
   const [toCurrency, setToCurrency] = useState()
   const [exchangeRate, setExchangeRate] = useState()

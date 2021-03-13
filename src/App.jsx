@@ -55,9 +55,33 @@ function App() {
     setAmountInFromCurrency(false)
   }
 
+  // calculate Currency when select is selected
+  function calculateCurrency(evt) {
+    if (evt.target.value === "EUR") {
+      evt.target.nextElementSibling.value = 0
+    } else {
+      fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${evt.target.value}`)
+        .then(res => res.json())
+        .then(data => {
+          evt.target.nextElementSibling.value = data.rates[evt.target.value] * amount
+        })
+    }
+  }
+
   // Adding all and one converter
   function addAll(evt) {
     const copiedConverterElements = (evt.target.previousElementSibling.lastChild).cloneNode(true)
+
+    let addConverterBtn = copiedConverterElements.querySelector('button')
+    addConverterBtn.addEventListener('click', addOne)
+
+    let converterSelects = copiedConverterElements.querySelectorAll('select')
+    let baseSelect = converterSelects[0]
+    baseSelect.value = fromCurrency
+    baseSelect.addEventListener('change', (evt) => setFromCurrency(evt.target.value))
+    for (let i = 1; i < converterSelects.length; i++) {
+      converterSelects[i].addEventListener('change', calculateCurrency)
+    }
 
     const parentElement = evt.target.previousElementSibling
     parentElement.appendChild(copiedConverterElements)
@@ -66,19 +90,8 @@ function App() {
   function addOne(evt) {
     const newConverter = (evt.target.previousElementSibling.lastChild).cloneNode(true)
     // console.log(evt.target.previousElementSibling.lastChild.lastChild.value)
-    let converterInput = newConverter.querySelector('input')
     let converterSelect = newConverter.querySelector('select')
-    converterSelect.addEventListener('change', (evt) => {
-      if (evt.target.value === "EUR") {
-        converterInput.value = 1
-      } else {
-        fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${evt.target.value}`)
-          .then(res => res.json())
-          .then(data => {
-            converterInput.value = data.rates[evt.target.value] * amount
-          })
-      }
-    })
+    converterSelect.addEventListener('change', calculateCurrency)
     evt.target.previousElementSibling.appendChild(newConverter)
   }
 

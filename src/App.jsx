@@ -59,15 +59,11 @@ function App() {
 
   // calculate Currency when select is selected
   function calculateCurrency(evt) {
-    if (evt.target.value === "EUR") {
-      evt.target.nextElementSibling.value = 0
-    } else {
-      fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${evt.target.value}`)
-        .then(res => res.json())
-        .then(data => {
-          evt.target.nextElementSibling.value = data.rates[evt.target.value] * amount
-        })
-    }
+    fetch(`${BASE_URL}?base=${evt.target.parentElement.parentElement.firstChild.firstChild.value}&symbols=${evt.target.value}`)
+      .then(res => res.json())
+      .then(data => {
+        evt.target.nextElementSibling.value = data.rates[evt.target.value] * evt.target.parentElement.parentElement.firstChild.children[1].value
+      })
   }
 
   // Adding all and one converter
@@ -129,10 +125,10 @@ function App() {
                 amount={toAmount}
               />
             </div>
-            <button id="addOneBtn" type="button" onClick={addOne}>+</button>
+            <button id="addOneBtn" className="addOneButton" type="button" onClick={addOne}>+</button>
           </form>
         </div>
-        <button type="button" onClick={addAll}>+</button>
+        <button type="button" className="addAllButton" onClick={addAll}>+</button>
       </div>
     </>
   );

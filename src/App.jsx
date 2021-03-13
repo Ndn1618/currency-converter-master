@@ -79,10 +79,7 @@ function App() {
     }
 
     let converterSelects = copiedConverterElements.querySelectorAll('select')
-    let baseSelect = converterSelects[0]
-    baseSelect.value = fromCurrency
-    baseSelect.addEventListener('change', (evt) => setFromCurrency(evt.target.value))
-    for (let i = 1; i < converterSelects.length; i++) {
+    for (let i = 0; i < converterSelects.length; i++) {
       converterSelects[i].addEventListener('change', calculateCurrency)
     }
 

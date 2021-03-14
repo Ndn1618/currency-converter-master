@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import Converter from './Components/Converter/Converter'
+import NewConverter from './Components/NewConverter/NewConverter'
+import ConverterElement from './Components/ConverterElement/ConverterElement'
 
 const BASE_URL = 'https://api.exchangeratesapi.io/latest'
+const converterElements = JSON.parse(localStorage.getItem('converterElements')) || []
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState(JSON.parse(localStorage.getItem('currencyOptions')) || [])
@@ -64,6 +67,14 @@ function App() {
       })
   }
 
+  // delete current converter
+  function deleteCurrentConverter(evt) {
+    let convElIndex = converterElements.findIndex(el => el.id = Number(evt.target.parentElement.dataset.id))
+    converterElements.splice(convElIndex, 1)
+    evt.target.parentElement.remove()
+    localStorage.setItem('converterElements', JSON.stringify(converterElements))
+  }
+
   // Adding all and one converter
   function addAll(evt) {
     const copiedConverterElements = (evt.target.previousElementSibling.lastChild).cloneNode(true)
@@ -75,7 +86,7 @@ function App() {
 
     let deleteButtons = copiedConverterElements.querySelectorAll(".deleteBtn")
     for (let i = 2; i < deleteButtons.length; i++) {
-      deleteButtons[i].addEventListener('click', (evt) => evt.target.parentElement.remove())
+      deleteButtons[i].addEventListener('click', deleteCurrentConverter)
     }
 
     let converterSelects = copiedConverterElements.querySelectorAll('select')
@@ -91,12 +102,19 @@ function App() {
   function addOne(evt) {
     const newConverter = (evt.target.previousElementSibling.lastChild).cloneNode(true)
     let converterSelect = newConverter.querySelector('select')
+    let converterInput = newConverter.querySelector('input')
     converterSelect.value = evt.target.previousElementSibling.lastChild.firstChild.value
     converterSelect.addEventListener('change', calculateCurrency)
 
     let deleteConverterBtn = newConverter.querySelector('button')
     deleteConverterBtn.classList.remove('deleteConverterBtn')
-    deleteConverterBtn.addEventListener('click', (evt) => evt.target.parentElement.remove())
+    deleteConverterBtn.addEventListener('click', deleteCurrentConverter)
+
+    let newConverterEl = new ConverterElement(converterElements[0] ? converterElements[converterElements.length - 1].id : 0, converterSelect.value, converterInput.value)
+    converterElements.push(newConverterEl)
+    localStorage.setItem('converterElements', JSON.stringify(converterElements))
+
+    newConverter.dataset.id = newConverterEl.id
 
     evt.target.previousElementSibling.appendChild(newConverter)
   }
@@ -122,6 +140,19 @@ function App() {
                 onChangeAmount={handleToAmountChange}
                 amount={toAmount}
               />
+              {
+                converterElements && (
+                  converterElements.map(converterElement => (
+                    <NewConverter
+                      key={converterElement.id}
+                      currencyOptions={currencyOptions}
+                      calculateCurrency={calculateCurrency}
+                      converterElement={converterElement}
+                      deleteCurrentConverter={deleteCurrentConverter}
+                    />
+                  ))
+                )
+              }
             </div>
             <button id="addOneBtn" className="addOneButton" type="button" onClick={addOne}>+</button>
           </form>

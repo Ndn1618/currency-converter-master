@@ -68,6 +68,8 @@ function App() {
   function addAll(evt) {
     const copiedConverterElements = (evt.target.previousElementSibling.lastChild).cloneNode(true)
 
+    let previousConverterSelects = (evt.target.previousElementSibling.lastChild).querySelectorAll('select')
+
     let addConverterBtn = copiedConverterElements.querySelector("#addOneBtn")
     addConverterBtn.addEventListener('click', addOne)
 
@@ -78,6 +80,7 @@ function App() {
 
     let converterSelects = copiedConverterElements.querySelectorAll('select')
     for (let i = 0; i < converterSelects.length; i++) {
+      converterSelects[i].value = previousConverterSelects[i].value
       converterSelects[i].addEventListener('change', calculateCurrency)
     }
 
@@ -87,8 +90,8 @@ function App() {
 
   function addOne(evt) {
     const newConverter = (evt.target.previousElementSibling.lastChild).cloneNode(true)
-    // console.log(evt.target.previousElementSibling.lastChild.lastChild.value)
     let converterSelect = newConverter.querySelector('select')
+    converterSelect.value = evt.target.previousElementSibling.lastChild.firstChild.value
     converterSelect.addEventListener('change', calculateCurrency)
 
     let deleteConverterBtn = newConverter.querySelector('button')
